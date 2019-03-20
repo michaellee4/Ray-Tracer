@@ -12,3 +12,7 @@ C++ Whitted stye ray tracer
 
 ## Fun Stuff
 * SIRD images (red/cyan 3d images)
+
+## Usage
+* (mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=RELEASE && make -j8)
+* run ./trace.sh --help
