@@ -184,9 +184,23 @@ public:
 	*/	
 	bool sceneLoaded() { return scene != 0; }
 
+	/**
+		@brief Marks the buffer as available to draw to
+		@param ready true if we can draw, false otherwise
+		@return None
+	*/	
 	void setReady(bool ready) { m_bBufferReady = ready; }
+
+	/**
+		@brief Checks if the buffer is ready to be drawn to 
+		@return True if ready, false otherwise
+	*/	
 	bool isReady() const { return m_bBufferReady; }
 
+	/**
+		@brief Gets a pointer to our scene 
+		@return the pointer to our scene object
+	*/	
 	const Scene& getScene() { return *scene; }
 
 	bool stopTrace;
