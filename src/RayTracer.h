@@ -13,29 +13,78 @@
 #include "scene/ray.h"
 
 class Scene;
+
+/** 
+* Stores pixel data related to the screen buffer.
+*/
 class Pixel {
 public:
 	Pixel(int i, int j, unsigned char* ptr) : ix(i), jy(j), value(ptr) {}
 
 	int ix;
 	int jy;
+	// RGB val
 	unsigned char* value;
 };
 
-
+/** 
+* Heavy lifter of the ray tracer.
+*/
 class RayTracer {
 public:
 	RayTracer();
 	~RayTracer();
 
+	/**
+		@brief colors in a pixel on the screen buffer.
+		@param i, j the coordinates of the pixel
+		@return The color of the pixel
+	*/
 	glm::dvec3 tracePixel(int i, int j);
+
+
+	/**
+		@brief Gets the reflective contribution of a secondary ray.
+		@param r secondary ray
+		@param depth recursive depth
+		@param t time of intersection
+		@param i intersection info
+		@return The color of the reflective contribution
+	*/
 	glm::dvec3 getReflContribution(ray& r, const glm::dvec3& thresh, int depth, double& t, const isect& i);
+
+	/**
+		@brief Gets the refractive contribution of a secondary ray.
+		@param r secondary ray
+		@param depth recursive depth
+		@param t time of intersection
+		@param i intersection info
+		@return The color of the refractive contribution
+	*/
 	glm::dvec3 getRefrContribution(ray& r, const glm::dvec3& thresh, int depth, double& t, const isect& i);
 
+	/**
+		@brief Gets the overall contribution of a primary ray
+		@param r the primary ray
+		@param depth recursive depth
+		@param lenght the distance the ray has travedl
+		@return The color of the overall contribution
+	*/
 	glm::dvec3 traceRay(ray& r, const glm::dvec3& thresh, int depth,
 	                    double& length);
 
+	/**
+		@brief Gets the color of a pixel.
+		@param i, j the coordinates of the pixel
+		@return The color of the pixel
+	*/
 	glm::dvec3 getPixel(int i, int j);
+
+	/**
+		@brief Sets the color of a pixel.
+		@param i, j the coordinates of the pixel
+		@return None
+	*/
 	void setPixel(int i, int j, glm::dvec3 color);
 	void getBuffer(unsigned char*& buf, int& w, int& h);
 	double aspectRatio();
