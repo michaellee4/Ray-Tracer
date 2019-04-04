@@ -86,22 +86,102 @@ public:
 		@return None
 	*/
 	void setPixel(int i, int j, glm::dvec3 color);
+
+	/**
+		@brief Gets a pointer to the window buffer by reference.
+		@param buf the returned pointer
+		@param w the width of the buffer
+		@param h the height of the buffer
+		@return None
+	*/	
 	void getBuffer(unsigned char*& buf, int& w, int& h);
 	double aspectRatio();
 
+	/**
+		@brief Traces all pixels in the image
+		@param w the width of the buffer
+		@param h the height of the buffer
+		@return None
+	*/	
 	void traceImage(int w, int h);
+
+	/**
+		@brief Helper function for adaptive super sampling
+		@param x_bl bottom left range of x
+		@param y_bl bottom left range of y
+		@param x_tr top right range of x
+		@param y_tr top right range of y
+		@return None
+	*/	
 	glm::dvec3 adaptiveSS(double x_bl, double y_bl, double x_tr, double y_tr, int depth);
+
+	/**
+		@brief main function for adaptive super sampling for anti aliasing
+		@param x x coord of the pixel to super sample
+		@param y y coord of the pixel to super sample
+		@return None
+	*/	
 	glm::dvec3 doAdaptive(double x, double y);
+
+	/**
+		@brief Performs jittered super sampling for anti aliasing
+		@param i the x coord of the pixel to super sample
+		@param j the y coord of the pixel to super sample
+		@return None
+	*/	
 	glm::dvec3 jitteredSS(int i, int j);
+
+	/**
+		@brief Performs normal super sampling for anti aliasing
+		@param i the x coord of the pixel to super sample
+		@param j the y coord of the pixel to super sample
+		@return None
+	*/	
 	glm::dvec3 superSamplePixel(int i, int j);
+
+	/**
+		@brief Generates a red/cyan 3d image of the scene
+		@return None
+	*/	
 	void SIRD();
+	
+	/**
+		@brief Performs anti aliasing on the image which reduces jaggedness
+		@return None
+	*/	
 	int aaImage();
+
+	/**
+		@brief Checks to see if the tracer is done tracing
+		@return None
+	*/	
 	bool checkRender();
+
+	/**
+		@brief Blocks until the tracer is done
+		@return None
+	*/	
 	void waitRender();
 
+	/**
+		@brief Initializes necessary variables and sets up the window buffer
+		@param w the width of the window buffer
+		@param h the height of the window buffer
+		@return None
+	*/	
 	void traceSetup(int w, int h);
 
+	/**
+		@brief Loads a .ray file to be traced
+		@param fn The file name/path to be traced
+		@return true if successfully loaded, false otherwise 
+	*/	
 	bool loadScene(const char* fn);
+
+	/**
+		@brief Checks if the scene has been successfully loaded
+		@return true if successfully loaded, false otherwise 
+	*/	
 	bool sceneLoaded() { return scene != 0; }
 
 	void setReady(bool ready) { m_bBufferReady = ready; }
