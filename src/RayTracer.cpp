@@ -26,9 +26,6 @@
 using namespace std;
 extern TraceUI* traceUI;
 
-// Use this variable to decide if you want to print out
-// debugging messages.  Gets set in the "trace single ray" mode
-// in TraceGLWindow, for example.
 bool debugMode = false;
 
 // Trace a top-level ray through pixel(i,j), i.e. normalized window coordinates (x,y),
@@ -72,7 +69,6 @@ glm::dvec3 RayTracer::getReflContribution(ray& r, const glm::dvec3& thresh, int 
 	auto I = r.getDirection();
 	auto N = i.getN();
 	const Material& m = i.getMaterial();
-	// from the slides
 	// I - (2.0 * glm::dot(I, N)) * N;
 	auto v_refl = glm::normalize( glm::reflect(I, N) );
 	
@@ -136,17 +132,6 @@ glm::dvec3 RayTracer::traceRay(ray& r, const glm::dvec3& thresh, int depth, doub
 #endif
 
 	if(scene->intersect(r, i)) {
-		// YOUR CODE HERE
-
-		// An intersection occurred!  We've got work to do.  For now,
-		// this code gets the material for the surface that was intersected,
-		// and asks that material to provide a color for the ray.
-
-		// This is a great place to insert code for recursive ray tracing.
-		// Instead of just returning the result of shade(), add some
-		// more steps: add in the contributions from reflected and refracted
-		// rays.
-
 		const Material& m = i.getMaterial();
 		colorC = m.shade(scene.get(), r, i);
 		if (depth == 0)
@@ -165,14 +150,6 @@ glm::dvec3 RayTracer::traceRay(ray& r, const glm::dvec3& thresh, int depth, doub
 		}
 
 	} else {
-		// No intersection.  This ray travels to infinity, so we color
-		// it according to the background color, which in this (simple) case
-		// is just black.
-		//
-		// FIXME: Add CubeMap support here.
-		// TIPS: CubeMap object can be fetched from traceUI->getCubeMap();
-		//       Check traceUI->cubeMap() to see if cubeMap is loaded
-		//       and enabled.
 		if (traceUI->cubeMap())
 		{
 			colorC = traceUI->getCubeMap()->getColor(r);
@@ -247,12 +224,6 @@ bool RayTracer::loadScene(const char* fn)
 	if (!sceneLoaded())
 		return false;
 	scene->buildKdTree();
-	// std::cout << "Scene Loaded" <<std::endl;
-	// std::cout << std::thread::hardware_concurrency()<<std::endl;
-	// std::cout << scene->getCamera().getU()<<std::endl;
-	// std::cout << scene->getCamera().getV()<<std::endl;
-	// auto tmp = glm::normalize(glm::cross(scene->getCamera().getV(),scene->getCamera().getU()));
-	// std::cout <<tmp<<std::endl ;
 
 	return true;
 }
@@ -279,8 +250,6 @@ void RayTracer::traceSetup(int w, int h)
 	samples = traceUI->getSuperSamples();
 	aaThresh = traceUI->getAaThreshold();
 
-	// YOUR CODE HERE
-	// FIXME: Additional initializations
 }
 
 /*
@@ -297,23 +266,6 @@ void RayTracer::traceImage(int w, int h)
 {
 	// Always call traceSetup before rendering anything.
 	traceSetup(w,h);
-	// this->SIRD();
-	// return;
-	// YOUR CODE HERE*
-	// FIXME: Start one or more threads for ray tracing
-	//
-	// TIPS: Ideally, the traceImage should be executed asynchronously,
-	//       i.e. returns IMMEDIATELY after working threads are launched.
-	//
-	//       An asynchronous traceImage lets the GUI update your results
-	//       while rendering.
-
-	// Check if we need to anti alias
-	// if (traceUI->aaSwitch())
-	// {
-	// 	this->aaImage();
-	// }
-	// https://medium.com/@phostershop/solving-multithreaded-raytracing-issues-with-c-11-7f018ecd76fa
 	std::size_t max = buffer_width * buffer_height;
 	std::size_t cores = threads;
 	volatile std::atomic<std::size_t> count(0);
@@ -350,10 +302,8 @@ void RayTracer::SIRD()
 	{
 		for (int y = 0; y < buffer_height; ++y)
 		{
-			// glm::dvec3 pixel_col = this->getPixel(x, y);
 			glm::dvec3 color = this->tracePixel(x, y);
 			color[1] = 0; color[2] = 0;
-			// glm::dvec3 scaled_col = (left_col * color);
 			this->setPixel(x, y, color);
 		}
 	}
@@ -372,10 +322,7 @@ void RayTracer::SIRD()
 	scene->getCamera().setLook(v_dir, updir);
 }
 
-/*
-	Adaptive super sample. Should be working
-	TODO: Test more, add checkbox, make test scene
-*/
+
 glm::dvec3 RayTracer::adaptiveSS(double x_bl, double y_bl, double x_tr, double y_tr, int depth)
 {
 	if (x_tr > buffer_width || y_tr > buffer_height)
@@ -415,8 +362,6 @@ glm::dvec3 RayTracer::adaptiveSS(double x_bl, double y_bl, double x_tr, double y
 			tr_res = adaptiveSS(center_x, center_y, x_tr, y_tr, depth + 1);
 		}
 	}
-	// Test for adaptive SS, make 10% brighter  each time a pixel is traced
-	// this->setPixel(x_bl, y_bl, this->getPixel(x_bl, y_bl) + glm::dvec3(25 / 255.0, 25 / 255.0, 25 / 255.0));
 	return ( bl_res+ br_res + tl_res + tr_res) / 4.0;
 }
 glm::dvec3 RayTracer::doAdaptive(double x, double y)
@@ -449,7 +394,6 @@ glm::dvec3 RayTracer::jitteredSS(int i, int j)
 			auto y_rand_normal = glm::clamp(d(gen), -3.0, 3.0 );
 			color+=trace((double) (x) + (sampX + 0.5 + (x_rand_normal / 6)) * subPixelXsize, 
 						 (double)(y) + (sampY + 0.5 + (y_rand_normal / 6)) * subPixelYsize);
-			/* code */
 		}
 	}
 	// average the color
@@ -475,7 +419,6 @@ glm::dvec3 RayTracer::superSamplePixel(int i, int j)
 		for (int sampY = 0; sampY < samples; ++sampY)
 		{
 			color+=trace((double) (x) + sampX * subPixelXsize, (double)(y) + sampY * subPixelYsize);
-			/* code */
 		}
 	}
 	// average the color
@@ -486,13 +429,6 @@ glm::dvec3 RayTracer::superSamplePixel(int i, int j)
 int RayTracer::aaImage()
 {
 
-	// YOUR CODE HERE*
-	// FIXME: Implement Anti-aliasing here
-	//
-	// TIP: samples and aaThresh have been synchronized with TraceUI by
-	//      RayTracer::traceSetup() function
-
-	// https://medium.com/@phostershop/solving-multithreaded-raytracing-issues-with-c-11-7f018ecd76fa
 	std::size_t max = buffer_width * buffer_height;
 	std::size_t cores = threads;
 	volatile std::atomic<std::size_t> count(0);
@@ -525,26 +461,6 @@ int RayTracer::aaImage()
 	        }));
 	}
 	return 0;
-}
-
-bool RayTracer::checkRender()
-{
-	// YOUR CODE HERE
-	// FIXME: Return true if tracing is done.
-	//        This is a helper routine for GUI.
-	//
-	// TIPS: Introduce an array to track the status of each worker thread.
-	//       This array is maintained by the worker threads.
-}
-
-void RayTracer::waitRender()
-{
-	// YOUR CODE HERE
-	// FIXME: Wait until the rendering process is done.
-	//        This function is essential if you are using an asynchronous
-	//        traceImage implementation.
-	//
-	// TIPS: Join all worker threads here.
 }
 
 

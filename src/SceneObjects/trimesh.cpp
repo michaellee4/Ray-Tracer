@@ -102,9 +102,7 @@ bool TrimeshFace::intersect(ray& r, isect& i) const
 // intersection in u (alpha) and v (beta).
 bool TrimeshFace::intersectLocal(ray& r, isect& i) const
 {
-	// YOUR CODE HERE*
-	//
-	// FIXME: Add ray-trimesh intersection
+n
 
 	// references to vertices
     const auto& a = this->parent->vertices[ids[0]];
@@ -133,10 +131,7 @@ bool TrimeshFace::intersectLocal(ray& r, isect& i) const
     						|| (m2 < RAY_EPSILON || m2 > 1) 
     						|| (m3 < RAY_EPSILON || m3 > 1) 
     						|| ((m2 + m3) < RAY_EPSILON || (m2 + m3) > 1);
-    // if (m1 < RAY_EPSILON || m1 > 1) return false;
-    // if (m2 < RAY_EPSILON || m2 > 1) return false;
-    // if (m3 < RAY_EPSILON || m3 > 1) return false;
-    // if ((m2 + m3) < RAY_EPSILON || (m2 + m3) > 1) return false;
+
     if(invalid_intersect) return false;
 
     // set intersect info

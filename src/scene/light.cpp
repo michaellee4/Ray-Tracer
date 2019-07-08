@@ -79,9 +79,7 @@ double DirectionalLight::distanceAttenuation(const glm::dvec3& P) const
 
 glm::dvec3 DirectionalLight::shadowAttenuation(const ray& r, const glm::dvec3& p) const
 {
-	// YOUR CODE HERE*:
-	// You should implement shadow-handling code here.
-	// still don't know what this does but ray constructor requires a 3rd vector
+
 	ray ray_to_light (p, this->getDirection(p), glm::dvec3(1,1,1), ray::SHADOW);
 	return dsaHelper(ray_to_light, p);
 
@@ -100,11 +98,7 @@ glm::dvec3 DirectionalLight::getDirection(const glm::dvec3& P) const
 double PointLight::distanceAttenuation(const glm::dvec3& P) const
 {
 
-	// YOUR CODE HERE*
-
-	// You'll need to modify this method to attenuate the intensity 
-	// of the light based on the distance between the source and the 
-	// point P.  For now, we assume no attenuation and just return 1.0
+0
 	double d = glm::length(P - position);
 	double I_att = 1.0 / (constantTerm + linearTerm * d + quadraticTerm * d * d);
 
@@ -129,12 +123,6 @@ glm::dvec3 PointLight::shadowAttenuation(const ray& r, const glm::dvec3& p) cons
 	 ray ray_to_light (p,this->getDirection(p), glm::dvec3(1.0,1.0,1.0), ray::SHADOW);
 
 	 return psaHelper(ray_to_light, p);
-
-	// YOUR CODE HERE*:
-	// You should implement shadow-handling code here.
-	// Lighting model equation: http://www.cs.utexas.edu/~fussell/courses/cs354/assignments/raytracing/equations.pdf
-	
-
 
 }
 

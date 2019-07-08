@@ -44,8 +44,6 @@ Camera::setLook(double r, double i, double j, double k)
 // We derive the new look direction by rotating the camera by the
 // quaternion rijk.
 {
-    // FIXME: use GLM instead
-    // set look matrix
     m[0][0] = 1.0 - 2.0 * (i * i + j * j);
     m[0][1] = 2.0 * (r * i - j * k);
     m[0][2] = 2.0 * (j * r + i * k);

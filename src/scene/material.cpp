@@ -19,32 +19,7 @@ Material::~Material()
 // the color of that point.
 glm::dvec3 Material::shade(Scene* scene, const ray& r, const isect& i) const
 {
-	// YOUR CODE HERE*
 
-	// For now, this method just returns the diffuse color of the object.
-	// This gives a single matte color for every distinct surface in the
-	// scene, and that's it.  Simple, but enough to get you started.
-	// (It's also inconsistent with the phong model...)
-
-	// Your mission is to fill in this method with the rest of the phong
-	// shading model, including the contributions of all the light sources.
-	// You will need to call both distanceAttenuation() and
-	// shadowAttenuation()
-	// somewhere in your code in order to compute shadows and light falloff.
-	//	if( debugMode )
-	//		std::cout << "Debugging Phong code..." << std::endl;
-
-	// When you're iterating through the lights,
-	// you'll want to use code that looks something
-	// like this:
-	//
-	// for ( const auto& pLight : scene->getAllLights() )
-	// {
-	//              // pLight has type unique_ptr<Light>
-	// 		.
-	// 		.
-	// 		.
-	// }
 
 	// get point of intersction
 	auto p = r.at(i.getT());
@@ -65,7 +40,6 @@ glm::dvec3 Material::shade(Scene* scene, const ray& r, const isect& i) const
 		// Direction towards the camera
 		glm::dvec3 V = glm::normalize(-r.getDirection());
 		// Direction that a reflection would take
-		// glm::dvec3 R = 2.0 * glm::dot(L, N) * N - L;
 		glm::dvec3 R = -glm::reflect(L, N);
  		auto tmp = glm::dot(N, L);
  		if (this->Trans()) { tmp = abs(tmp); }
@@ -75,7 +49,6 @@ glm::dvec3 Material::shade(Scene* scene, const ray& r, const isect& i) const
 
 		// check if object is transparent?
 		glm::dvec3 spec = ks(i) * pow(max(glm::dot(V,R),0.0), shininess(i));
-		// glm::dvec3 spec = !going_in ? glm::dvec3(0, 0, 0) : ks(i) * pow(max(glm::dot(V,R),0.0), shininess(i));
 		color += light_color * (diffuse + spec) * light->distanceAttenuation(p);
 	}
 
@@ -98,15 +71,7 @@ TextureMap::TextureMap(string filename)
 
 glm::dvec3 TextureMap::getMappedValue(const glm::dvec2& coord) const
 {
-	// YOUR CODE HERE
-	//
-	// In order to add texture mapping support to the
-	// raytracer, you need to implement this function.
-	// What this function should do is convert from
-	// parametric space which is the unit square
-	// [0, 1] x [0, 1] in 2-space to bitmap coordinates,
-	// and use these to perform bilinear interpolation
-	// of the values.
+.
 	if (data.empty())
 	{
 		return glm::dvec3(1.0,1.0,1.0);
@@ -163,11 +128,6 @@ glm::dvec3 TextureMap::getMappedValue(const glm::dvec2& coord) const
 
 glm::dvec3 TextureMap::getPixelAt(int x, int y) const
 {
-	// YOUR CODE HERE
-	//
-	// In order to add texture mapping support to the
-	// raytracer, you need to implement this function.
-
 	if (data.empty())
 	{
 		return glm::dvec3(1.0, 1.0, 1.0);

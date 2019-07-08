@@ -7,8 +7,7 @@ extern TraceUI* traceUI;
 
 glm::dvec3 CubeMap::getColor(ray r) const
 {
-	// YOUR CODE HERE
-	// FIXME: Implement Cube Map here
+
 	glm::dvec3 dir = r.getDirection();
 	double x = dir[0], y = dir[1], z = dir[2];
 
@@ -64,7 +63,6 @@ glm::dvec3 CubeMap::getColor(ray r) const
 	double u = 0.5 * (uc / max_axis + 1.0);
 	double v = 0.5 * (vc / max_axis + 1.0);
 	return tMap[index]->getMappedValue(glm::dvec2(u, v));
-	// return glm::dvec3();
 }
 
 CubeMap::CubeMap()
